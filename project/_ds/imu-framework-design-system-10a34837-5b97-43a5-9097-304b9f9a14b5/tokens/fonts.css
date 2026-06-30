@@ -1,0 +1,9 @@
+/* ============================================================
+   IMU Framework Design — Webfonts
+   NOTE: The exact wordmark font was not supplied. Poppins is used
+   as the closest Google Fonts match to the geometric monoline
+   wordmark (round 'o', pointed 'M' apex, single-story 'a'/'g').
+   Confirm or replace with the brand's licensed font file.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');

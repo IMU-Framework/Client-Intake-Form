@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/imu-framework-design-system-10a34837-5b97-43a5-9097-304b9f9a14b5/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/imu-framework-design-system-10a34837-5b97-43a5-9097-304b9f9a14b5/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/imu-framework-design-system-10a34837-5b97-43a5-9097-304b9f9a14b5/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/imu-framework-design-system-10a34837-5b97-43a5-9097-304b9f9a14b5/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/imu-framework-design-system-10a34837-5b97-43a5-9097-304b9f9a14b5/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/imu-framework-design-system-10a34837-5b97-43a5-9097-304b9f9a14b5/styles.css">
+  <script src="_ds/imu-framework-design-system-10a34837-5b97-43a5-9097-304b9f9a14b5/_ds_bundle.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    input::placeholder, textarea::placeholder { color: var(--imu-neutral-400); }
+    input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+    @media print { .no-print { display: none !important; } }
+  </style>
+</helmet>
+
+<div style="min-height: 100vh; background: var(--surface-sunken); font-family: var(--font-sans); color: var(--text-body);">
+
+  <!-- ══════════ INTRO ══════════ -->
+  <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
+  <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 56px 24px;">
+    <div style="max-width: 540px; width: 100%;">
+      <img src="assets/logo-banner.png" alt="IMU Framework Design" style="height: 80px; width: auto; display: block; margin-bottom: 12px">
+      <div style="font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-brand); margin-bottom: 20px; font-weight: 500">一畝框作設計．辦公室設計前置問卷</div>
+      <h1 style="font-family: var(--font-zh); font-size: clamp(28px, 6vw, 38px); font-weight: 700; color: var(--text-strong); line-height: 1.3; letter-spacing: -0.01em; margin: 0 0 18px;">見面之前，<br>先了解您的空間需求</h1>
+      <div style="width: 40px; height: 2.5px; background: var(--imu-blue-600); margin-bottom: 24px;"></div>
+      <p style="font-size: 15px; color: var(--text-muted); line-height: 1.9; margin: 0 0 14px; font-family: var(--font-zh);">感謝您願意撥空與我們預約會面。我們準備了這份簡短的問卷，希望能協助您整理貴公司的專案輪廓，並讓我們提前了解需求、擬定適用的合作方式 — 期望在正式碰面時，直接聚焦於對您有幫助的討論。</p>
+      <p style="font-size: 15px; color: var(--text-muted); line-height: 1.9; margin: 0 0 28px; font-family: var(--font-zh);">填寫大約需要 <strong style="color: var(--text-strong); font-weight: 600;">3–5 分鐘</strong>，共 {{ sectionCount }} 個主題。所有資訊僅供內部參考，絕對保密。</p>
+
+      <div style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); padding: 22px 22px 24px; margin-bottom: 30px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 18px;">
+        <sc-for list="{{ introFields }}" as="f" hint-placeholder-count="2">
+          <div>
+            <div style="display: flex; align-items: baseline; gap: 6px; margin-bottom: 8px;">
+              <span style="font-size: 15px; font-weight: 600; color: var(--text-strong); font-family: var(--font-zh);">{{ f.label }}</span>
+              <sc-if value="{{ f.required }}" hint-placeholder-val="{{ true }}"><span style="font-size: 13px; color: var(--imu-danger); font-weight: 600;">*</span></sc-if>
+            </div>
+            <input value="{{ f.value }}" onChange="{{ f.onChange }}" placeholder="{{ f.placeholder }}" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-default); border-radius: var(--radius-md); font-size: 15px; color: var(--text-strong); background: var(--surface-page); outline: none; font-family: var(--font-sans); transition: border-color .15s, box-shadow .15s;" style-focus="border-color: var(--imu-blue-600); box-shadow: var(--shadow-focus);">
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px;">
+        <sc-for list="{{ sections }}" as="sec" hint-placeholder-count="5">
+          <span style="font-family: var(--font-zh); font-size: 12.5px; color: var(--text-muted); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 5px 12px; background: var(--surface-card);">{{ sec.label }}</span>
+        </sc-for>
+      </div>
+
+      <button onClick="{{ onStart }}" disabled="{{ startDisabled }}" style="{{ startBtnStyle }}" style-hover="{{ startBtnHover }}">開始填寫 →</button>
+      <sc-if value="{{ showStartHint }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size: 13px; color: var(--text-subtle); margin-top: 10px; font-family: var(--font-zh);">請先填寫公司名稱與您的稱呼</div>
+      </sc-if>
+      <div style="margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--border-hairline); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-subtle);">© 2026 一畝框作有限公司 IMU Framework Ltd. 未經同意不得轉載、重製。</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ══════════ FORM ══════════ -->
+  <sc-if value="{{ isForm }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <!-- Sticky progress header -->
+    <div class="no-print" style="background: var(--surface-page); border-bottom: 1px solid var(--border-hairline); padding: 14px 24px; position: sticky; top: 0; z-index: 100;">
+      <div style="max-width: 700px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-subtle); letter-spacing: 0.14em; text-transform: uppercase;">{{ currentEye }}</span>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-subtle); letter-spacing: 0.06em;">{{ stepLabel }}</span>
+        </div>
+        <div style="height: 2px; background: var(--border-hairline); border-radius: 1px;">
+          <div style="{{ barFillStyle }}"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+          <sc-for list="{{ tracker }}" as="t" hint-placeholder-count="5">
+            <span style="{{ t.style }}">{{ t.label }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div style="max-width: 700px; margin: 0 auto; padding: 40px 24px 120px;">
+      <div style="margin-bottom: 34px;">
+        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-subtle); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 10px;">{{ currentEye }}</div>
+        <h2 style="font-family: var(--font-zh); font-size: clamp(24px, 4vw, 30px); font-weight: 700; color: var(--text-strong); letter-spacing: -0.01em; margin: 0 0 14px;">{{ currentLabel }}</h2>
+        <div style="width: 30px; height: 2.5px; background: var(--imu-blue-600);"></div>
+      </div>
+
+      <!-- Generic question list (rendered from questions.js) -->
+      <div style="display: flex; flex-direction: column; gap: 28px;">
+        <sc-for list="{{ questions }}" as="qq" hint-placeholder-count="3">
+          <div>
+            <!-- Question header -->
+            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-subtle); font-weight: 600; letter-spacing: 0.06em; min-width: 30px;">{{ qq.num }}</span>
+              <span style="font-size: 15px; font-weight: 600; color: var(--text-strong); line-height: 1.55; flex: 1; font-family: var(--font-zh);">{{ qq.q }}<sc-if value="{{ qq.required }}" hint-placeholder-val="{{ false }}"><span style="color: var(--imu-danger); font-weight: 600; margin-left: 4px;">*</span></sc-if></span>
+              <sc-if value="{{ qq.optional }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 11px; border-radius: var(--radius-pill); background: var(--imu-blue-50); color: var(--text-brand); border: 1px solid var(--imu-blue-200); white-space: nowrap;">選填</span></sc-if>
+            </div>
+            <sc-if value="{{ qq.hasHint }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size: 13px; color: var(--text-subtle); line-height: 1.75; margin-bottom: 12px; margin-left: 38px; font-family: var(--font-zh);">{{ qq.hint }}</div>
+            </sc-if>
+
+            <!-- type: text -->
+            <sc-if value="{{ qq.isText }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <sc-if value="{{ qq.hasPrefix }}" hint-placeholder-val="{{ false }}"><span style="font-size: 15px; color: var(--text-muted); white-space: nowrap; font-family: var(--font-zh);">{{ qq.prefix }}</span></sc-if>
+                <input value="{{ qq.value }}" onChange="{{ qq.onChange }}" placeholder="{{ qq.placeholder }}" style="flex: 1; padding: 11px 14px; border: 1.5px solid var(--border-default); border-radius: var(--radius-md); font-size: 15px; color: var(--text-strong); background: var(--surface-page); outline: none; font-family: var(--font-sans); transition: border-color .15s, box-shadow .15s;" style-focus="border-color: var(--imu-blue-600); box-shadow: var(--shadow-focus);">
+                <sc-if value="{{ qq.hasUnit }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: var(--text-muted); white-space: nowrap; font-family: var(--font-zh);">{{ qq.unit }}</span></sc-if>
+              </div>
+            </sc-if>
+
+            <!-- type: number -->
+            <sc-if value="{{ qq.isNumber }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <sc-if value="{{ qq.hasPrefix }}" hint-placeholder-val="{{ false }}"><span style="font-size: 15px; color: var(--text-muted); white-space: nowrap; font-family: var(--font-zh);">{{ qq.prefix }}</span></sc-if>
+                <input type="number" value="{{ qq.value }}" onChange="{{ qq.onChange }}" placeholder="{{ qq.placeholder }}" style="flex: 1; padding: 11px 14px; border: 1.5px solid var(--border-default); border-radius: var(--radius-md); font-size: 15px; color: var(--text-strong); background: var(--surface-page); outline: none; font-family: var(--font-sans); transition: border-color .15s, box-shadow .15s;" style-focus="border-color: var(--imu-blue-600); box-shadow: var(--shadow-focus);">
+                <span style="font-size: 13px; color: var(--text-muted); white-space: nowrap; font-family: var(--font-zh);">{{ qq.unit }}</span>
+              </div>
+            </sc-if>
+
+            <!-- type: textarea -->
+            <sc-if value="{{ qq.isTextarea }}" hint-placeholder-val="{{ false }}">
+              <textarea value="{{ qq.value }}" onChange="{{ qq.onChange }}" placeholder="{{ qq.placeholder }}" rows="{{ qq.rows }}" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-default); border-radius: var(--radius-md); font-size: 15px; color: var(--text-strong); background: var(--surface-page); outline: none; font-family: var(--font-zh); resize: vertical; line-height: 1.75; transition: border-color .15s, box-shadow .15s;" style-focus="border-color: var(--imu-blue-600); box-shadow: var(--shadow-focus);"></textarea>
+            </sc-if>
+
+            <!-- type: radio -->
+            <sc-if value="{{ qq.isRadio }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <sc-for list="{{ qq.options }}" as="opt" hint-placeholder-count="4">
+                  <div onClick="{{ opt.onClick }}" style="{{ opt.rowStyle }}">
+                    <div style="{{ opt.dotStyle }}"><sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}"><div style="width: 6px; height: 6px; border-radius: 50%; background: #fff;"></div></sc-if></div>
+                    <div><div style="font-size: 14px; font-weight: 500; color: var(--text-strong); line-height: 1.5; font-family: var(--font-zh);">{{ opt.label }}</div><sc-if value="{{ opt.hasSub }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; color: var(--text-muted); margin-top: 2px; line-height: 1.5; font-family: var(--font-zh);">{{ opt.sub }}</div></sc-if></div>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ qq.hasSelectNote }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 10px; font-size: 13px; color: var(--text-muted); line-height: 1.8; font-family: var(--font-zh); background: var(--imu-blue-50); border: 1px solid var(--imu-blue-200); border-radius: var(--radius-md); padding: 11px 14px;">{{ qq.selectNote }}</div>
+              </sc-if>
+              <sc-if value="{{ qq.showOther }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 10px;"><textarea value="{{ qq.otherValue }}" onChange="{{ qq.otherOnChange }}" placeholder="{{ qq.otherPlaceholder }}" rows="{{ qq.otherRows }}" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-default); border-radius: var(--radius-md); font-size: 15px; color: var(--text-strong); background: var(--surface-page); outline: none; font-family: var(--font-zh); resize: vertical; line-height: 1.75; transition: border-color .15s, box-shadow .15s;" style-focus="border-color: var(--imu-blue-600); box-shadow: var(--shadow-focus);"></textarea></div>
+              </sc-if>
+            </sc-if>
+
+            <!-- type: checkbox -->
+            <sc-if value="{{ qq.isCheckbox }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <sc-for list="{{ qq.options }}" as="opt" hint-placeholder-count="4">
+                  <div onClick="{{ opt.onClick }}" style="{{ opt.rowStyle }}">
+                    <div style="{{ opt.dotStyle }}"><sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if></div>
+                    <span style="font-size: 14px; font-weight: 500; color: var(--text-strong); font-family: var(--font-zh);">{{ opt.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ qq.showOther }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 10px;"><input value="{{ qq.otherValue }}" onChange="{{ qq.otherOnChange }}" placeholder="{{ qq.otherPlaceholder }}" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-default); border-radius: var(--radius-md); font-size: 15px; color: var(--text-strong); background: var(--surface-page); outline: none; font-family: var(--font-sans); transition: border-color .15s, box-shadow .15s;" style-focus="border-color: var(--imu-blue-600); box-shadow: var(--shadow-focus);"></div>
+              </sc-if>
+            </sc-if>
+
+            <!-- type: window -->
+            <sc-if value="{{ qq.isWindow }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-bottom: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                  <span style="font-size: 13px; color: var(--text-muted); min-width: 28px; font-family: var(--font-zh);">姓名</span>
+                  <div onClick="{{ qq.onToggleSame }}" style="{{ qq.sameTagStyle }}">
+                    <div style="{{ qq.sameBoxStyle }}"><sc-if value="{{ qq.sameOn }}" hint-placeholder-val="{{ false }}"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3L3 5L7 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if></div>
+                    <span style="{{ qq.sameLabelStyle }}">同填表人</span>
+                  </div>
+                </div>
+                <input value="{{ qq.windowNameValue }}" onChange="{{ qq.onWindowName }}" placeholder="聯絡窗口姓名" disabled="{{ qq.sameOn }}" style="{{ qq.windowInputStyle }}" style-focus="border-color: var(--imu-blue-600); box-shadow: var(--shadow-focus);">
+              </div>
+              <div>
+                <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-family: var(--font-zh);">職稱</div>
+                <input value="{{ qq.windowTitleValue }}" onChange="{{ qq.onWindowTitle }}" placeholder="聯絡窗口職稱" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-default); border-radius: var(--radius-md); font-size: 15px; color: var(--text-strong); background: var(--surface-page); outline: none; font-family: var(--font-sans); transition: border-color .15s, box-shadow .15s;" style-focus="border-color: var(--imu-blue-600); box-shadow: var(--shadow-focus);">
+              </div>
+            </sc-if>
+
+            <!-- type: contact -->
+            <sc-if value="{{ qq.isContact }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <input value="{{ qq.lineValue }}" onChange="{{ qq.onLine }}" placeholder="LINE ID" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-default); border-radius: var(--radius-md); font-size: 15px; color: var(--text-strong); background: var(--surface-page); outline: none; font-family: var(--font-sans); transition: border-color .15s, box-shadow .15s;" style-focus="border-color: var(--imu-blue-600); box-shadow: var(--shadow-focus);">
+                <input type="tel" value="{{ qq.phoneValue }}" onChange="{{ qq.onPhone }}" placeholder="電話號碼" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-default); border-radius: var(--radius-md); font-size: 15px; color: var(--text-strong); background: var(--surface-page); outline: none; font-family: var(--font-sans); transition: border-color .15s, box-shadow .15s;" style-focus="border-color: var(--imu-blue-600); box-shadow: var(--shadow-focus);">
+                <input type="email" value="{{ qq.emailValue }}" onChange="{{ qq.onEmail }}" placeholder="Email" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-default); border-radius: var(--radius-md); font-size: 15px; color: var(--text-strong); background: var(--surface-page); outline: none; font-family: var(--font-sans); transition: border-color .15s, box-shadow .15s;" style-focus="border-color: var(--imu-blue-600); box-shadow: var(--shadow-focus);">
+              </div>
+            </sc-if>
+
+            <!-- required-field warning -->
+            <sc-if value="{{ qq.hasError }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; align-items: center; gap: 6px; margin-top: 9px; font-size: 13px; color: var(--imu-danger); font-family: var(--font-zh);">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="flex-shrink: 0;"><circle cx="7.5" cy="7.5" r="6.3" stroke="currentColor" stroke-width="1.3"></circle><path d="M7.5 4.2V8.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"></path><circle cx="7.5" cy="10.6" r="0.7" fill="currentColor"></circle></svg>
+                <span>{{ qq.errorMsg }}</span>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- Fixed bottom nav -->
+    <div class="no-print" style="position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface-page); border-top: 1px solid var(--border-hairline); padding: 14px 24px;">
+      <div style="max-width: 700px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+        <button onClick="{{ onBack }}" style="padding: 11px 22px; border: 1.5px solid var(--border-default); border-radius: var(--radius-md); background: transparent; color: var(--text-muted); font-size: 14px; font-weight: 500; cursor: pointer; font-family: var(--font-zh); transition: background .15s;" style-hover="background: var(--surface-muted);">← 上一步</button>
+        <button onClick="{{ onNext }}" style="padding: 12px 30px; border: 1.5px solid var(--action-primary); border-radius: var(--radius-md); background: var(--action-primary); color: var(--text-on-blue); font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font-zh); letter-spacing: 0.02em; transition: background .15s, border-color .15s;" style-hover="background: var(--action-primary-hover); border-color: var(--action-primary-hover);">{{ nextLabel }}</button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ══════════ DONE ══════════ -->
+  <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+  <div style="min-height: 100vh; padding: 56px 24px 60px;">
+    <div style="max-width: 640px; margin: 0 auto;">
+      <div style="width: 52px; height: 52px; border-radius: var(--radius-md); background: var(--imu-blue-600); display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+        <svg width="24" height="20" viewBox="0 0 24 20" fill="none"><path d="M2 10L9 17L22 2" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <h2 style="font-family: var(--font-zh); font-size: 28px; font-weight: 700; color: var(--text-strong); letter-spacing: -0.01em; margin: 0 0 10px;">感謝您，{{ d.fillerName }}！</h2>
+      <p style="font-size: 15px; color: var(--text-muted); line-height: 1.9; margin: 0 0 32px; font-family: var(--font-zh);">問卷已整理完畢。請複製下方文字，透過 <strong style="color: var(--text-strong);">LINE 傳送給我們</strong>，或直接<strong style="color: var(--text-strong);">寄至 imuchien@gmail.com</strong>，我們收到後會在見面前仔細閱讀。</p>
+
+      <div style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border-hairline); background: var(--surface-sunken);">
+          <span style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--text-subtle); text-transform: uppercase;">SUMMARY · 您的填表摘要</span>
+          <button onClick="{{ onCopy }}" style="{{ copyBtnStyle }}">{{ copyLabel }}</button>
+        </div>
+        <pre style="margin: 0; padding: 20px; font-size: 13px; color: var(--text-body); line-height: 1.85; font-family: var(--font-zh); white-space: pre-wrap; word-break: break-word; max-height: 480px; overflow-y: auto;">{{ summaryText }}</pre>
+      </div>
+
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <a href="{{ mailtoHref }}" style="flex: 1 1 auto; min-width: 140px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 11px 20px; background: var(--action-primary); color: var(--text-on-blue); border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600; text-decoration: none; font-family: var(--font-zh);">
+          <svg width="15" height="12" viewBox="0 0 15 12" fill="none"><rect x="1" y="1" width="13" height="10" rx="1.5" stroke="white" stroke-width="1.3"></rect><path d="M1 3L7.5 7L14 3" stroke="white" stroke-width="1.3" stroke-linecap="round"></path></svg>
+          寄送 Email
+        </a>
+        <button onClick="{{ onPrint }}" style="flex: 1 1 auto; min-width: 140px; padding: 11px 20px; border: 1.5px solid var(--border-default); border-radius: var(--radius-md); background: transparent; color: var(--text-muted); font-size: 13.5px; font-weight: 500; cursor: pointer; font-family: var(--font-zh); transition: background .15s;" style-hover="background: var(--surface-muted);">列印 / 儲存 PDF</button>
+        <button onClick="{{ onRestart }}" style="margin-left: auto; flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; padding: 11px 20px; border: 1.5px solid var(--border-default); border-radius: var(--radius-md); background: transparent; color: var(--text-subtle); font-size: 13.5px; font-weight: 500; cursor: pointer; font-family: var(--font-zh); transition: background .15s, color .15s;" style-hover="background: var(--surface-muted); color: var(--text-muted);">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7a5 5 0 1 1 1.5 3.5M2 7V4M2 7h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          返回重填
+        </button>
+      </div>
+
+      <div style="margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border-hairline); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-subtle);">© 2026 一畝框作有限公司 · IMU Framework Design</div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    step: "intro",
+    copied: false,
+    tried: {},
+    d: {
+      companyName: "", fillerName: "",
+      headcount: "", moveInDate: "", leaseArea: "", usableArea: "", monthlyRent: "",
+      budgetRange: "", budgetRangeNote: "", budgetFurniture: "", budgetFurnitureNote: "", feeAck: [],
+      reasons: [], otherReason: "", goals: "", references: "",
+      windowSameAsFiller: false, windowName: "", windowTitle: "",
+      contactLine: "", contactPhone: "", contactEmail: "",
+      fillerRole: "", fillerRoleNote: "", decisionMaker: "",
+      officeSystem: "", officeSystemOther: "", hasPast: "", pastExp: "",
+    },
+  };
+
+  componentDidMount() {
+    if (this.CFG) return;
+    import("./questions.js")
+      .then(m => { this.CFG = m.INTAKE_CONFIG; this.BUDGET_MODEL = m.BUDGET_MODEL; this.forceUpdate(); })
+      .catch(e => console.error("無法載入 questions.js — 請確認檔案存在且語法正確。", e));
+  }
+
+  setField(f, val) { this.setState(s => ({ d: { ...s.d, [f]: val } })); }
+  toggle(f, val) {
+    this.setState(s => {
+      const arr = s.d[f] || [];
+      const next = arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val];
+      return { d: { ...s.d, [f]: next } };
+    });
+  }
+  onToggleSame() {
+    this.setState(s => {
+      const next = !s.d.windowSameAsFiller;
+      return { d: { ...s.d, windowSameAsFiller: next, windowName: next ? s.d.fillerName : s.d.windowName } };
+    });
+  }
+
+  // ---- required-field validation ----
+  isFilled(q, d) {
+    switch (q.type) {
+      case "checkbox": return (d[q.key] || []).length > 0;
+      case "window":   return !!(((d.windowSameAsFiller ? d.fillerName : d.windowName) || "") + "").trim();
+      case "contact":  return !!((d.contactLine || d.contactPhone || d.contactEmail || "") + "").trim();
+      case "radio":    return !!d[q.key];
+      default:         return !!((d[q.key] || "") + "").trim();
+    }
+  }
+
+  // ---- parametric budget estimate (driven by BUDGET_MODEL) ----
+  computeBudget() {
+    const M = this.BUDGET_MODEL, d = this.state.d;
+    if (!M) return null;
+    let area = 0, areaKey = null;
+    for (const k of M.areaKeys) { const v = parseFloat(d[k]); if (v > 0) { area = v; areaKey = k; break; } }
+    const head = parseFloat(d[M.headcountKey]) || 0;
+    if (!area) return { hasArea: false };
+    let mult = 1;
+    for (const b of M.scale) { if (area <= b.max) { mult = b.mult; break; } }
+    const furnLow = head * M.furniturePerHead.low;
+    const furnHigh = head * M.furniturePerHead.high;
+    const tiers = M.tiers.map(t => {
+      const engLow = t.low * mult * area, engHigh = t.high * mult * area;
+      return { value: t.value, name: t.name,
+        engLow, engHigh, allLow: engLow + furnLow, allHigh: engHigh + furnHigh };
+    });
+    return { hasArea: true, area, areaKey, head, mult, scope: d[M.furnitureScopeKey], tiers };
+  }
+
+  // 金額四捨五入：一般 100 萬精度；「部分包含／尚未確定」時，1000 萬以上改用 500 萬精度
+  roundAmt(x, scope) {
+    const fine = (this.BUDGET_MODEL && this.BUDGET_MODEL.roundTo) || 100;
+    const unit = ((scope === "partial" || scope === "unknown" || !scope) && x >= 1000) ? 500 : fine;
+    return Math.round(x / unit) * unit;
+  }
+
+  // ---- turn the budget question's options into computed range labels ----
+  budgetOptions(q) {
+    const b = this.computeBudget();
+    const T = (this.BUDGET_MODEL && this.BUDGET_MODEL.text) || {};
+    const U = T.unit || "萬";
+    const r = x => Number(this.roundAmt(x, b && b.scope)).toLocaleString("en-US");
+    const hasFurn = !!(b && b.hasArea && b.head > 0);
+    const options = (q.options || []).map(o => {
+      if (o.value === "tbd") return { value: o.value, label: o.label };
+      if (o.value === "light") {
+        if (!b || !b.hasArea) return { value: o.value, label: `${T.lightName || "輕量"}（請先填寫坪數）` };
+        const t1 = b.tiers[0];
+        const isYes = b.scope === "yes" && hasFurn;
+        const low = isYes ? t1.allLow : t1.engLow;
+        const pre = isYes ? (T.scopeYes || "總預算")
+          : (b.scope === "no") ? (T.scopeNo || "裝修工程預算")
+          : (T.scopePartial || "總預算約");
+        return { value: o.value, label: `${T.lightName || "輕量"}・${pre} ${r(low)}${T.lightSuffix || " 萬以下"}` };
+      }
+      if (!b || !b.hasArea) return { value: o.value, label: o.label + "（請先填寫坪數）" };
+      const t = b.tiers.find(x => x.value === o.value);
+      if (!t) return { value: o.value, label: o.label };
+      if (b.scope === "yes" && hasFurn) {
+        return { value: o.value, label: `${t.name}・${T.scopeYes || "總預算"} ${r(t.allLow)} – ${r(t.allHigh)} ${U}` };
+      }
+      if (b.scope !== "no") {
+        return { value: o.value, label: `${t.name}・${T.scopePartial || "總預算約"} ${r(t.engLow)} – ${r(t.allHigh)} ${U}` };
+      }
+      return { value: o.value, label: `${t.name}・${T.scopeNo || "裝修工程預算"} ${r(t.engLow)} – ${r(t.engHigh)} ${U}` };
+    });
+    return options;
+  }
+
+  // ---- Build the plain-text summary, driven entirely by questions.js ----
+  buildText(d) {
+    const CFG = this.CFG;
+    if (!CFG) return "";
+    const v = (val, fb = "（未填）") => (val && ("" + val).trim()) ? ("" + val).trim() : fb;
+    const out = ["辦公室規劃需求確認表", "━━━━━━━━━━━━━━━━━━━━━━━", ""];
+
+    CFG.intro.fields.forEach(f => out.push(`${f.label}：${v(d[f.key])}`));
+    out.push("");
+
+    CFG.sections.forEach(sec => {
+      out.push("▌ " + sec.label);
+      sec.questions.forEach(q => {
+        if (q.showIf && d[q.showIf.key] !== q.showIf.equals) return;
+        const lbl = q.sumLabel || q.q;
+        if (q.type === "radio") {
+          const o = (q.options || []).find(o => o.value === d[q.key]);
+          let rtxt = o ? o.label : "（未選）";
+          if (q.computed === "budget" && d[q.key] && d[q.key] !== "tbd") {
+            const b = this.computeBudget();
+            if (b && b.hasArea) {
+              const r = x => Number(this.roundAmt(x, b.scope)).toLocaleString("en-US");
+              if (d[q.key] === "light") {
+                const isYes = b.scope === "yes" && b.head > 0;
+                const low = isYes ? b.tiers[0].allLow : b.tiers[0].engLow;
+                const pre = isYes ? "含家具設備約" : (b.scope === "no" ? "裝修工程約" : "總預算約");
+                rtxt = `輕量・${pre} ${r(low)} 萬以下`;
+              } else {
+                const t = b.tiers.find(x => x.value === d[q.key]);
+                if (t) {
+                  if (b.scope === "yes" && b.head > 0) rtxt = `${t.name}・含家具設備約 ${r(t.allLow)}–${r(t.allHigh)} 萬`;
+                  else if (b.scope === "no") rtxt = `${t.name}・裝修工程約 ${r(t.engLow)}–${r(t.engHigh)} 萬`;
+                  else rtxt = `${t.name}・總預算約 ${r(t.engLow)}–${r(t.allHigh)} 萬`;
+                }
+              }
+            }
+          }
+          if (q.allowOther && (d[q.key] === "other" || (q.otherWhen && d[q.key] === q.otherWhen)) && d[q.otherKey]) rtxt += "（" + d[q.otherKey] + "）";
+          out.push(`${lbl}：${rtxt}`);
+        } else if (q.type === "checkbox") {
+          const arr = d[q.key] || [];
+          let txt = arr.length
+            ? arr.map(val => { const o = (q.options || []).find(o => o.value === val); return o ? o.label : val; }).join("、")
+            : "（未選）";
+          if (q.allowOther && arr.includes("other") && d[q.otherKey]) txt += "（" + d[q.otherKey] + "）";
+          out.push(`${lbl}：${txt}`);
+        } else if (q.type === "window") {
+          const wn = d.windowSameAsFiller ? d.fillerName : d.windowName;
+          const disp = [v(wn, ""), v(d.windowTitle, "")].filter(Boolean).join("・") || "（未填）";
+          out.push(`${lbl}：${disp}`);
+        } else if (q.type === "contact") {
+          out.push(`LINE：${v(d.contactLine)}`);
+          out.push(`電話：${v(d.contactPhone)}`);
+          out.push(`Email：${v(d.contactEmail)}`);
+        } else if (q.type === "number") {
+          out.push(`${lbl}：${d[q.key] ? d[q.key] + (q.sumSuffix || "") : "（未填）"}`);
+        } else {
+          out.push(`${lbl}：${v(d[q.key])}`);
+        }
+      });
+      out.push("");
+    });
+    return out.join("\n").trim();
+  }
+
+  renderVals() {
+    const CFG = this.CFG;
+    const d = this.state.d;
+    const step = this.state.step;
+    const isIntro = step === "intro";
+    const isDone = step === "done";
+    const isForm = !isIntro && !isDone;
+
+    // Until questions.js loads, render the intro shell only.
+    if (!CFG) {
+      return { isIntro: true, isForm: false, isDone: false, sectionCount: "", sections: [], introFields: [], startDisabled: true, showStartHint: false, startBtnStyle: {}, startBtnHover: {}, onStart: () => {} };
+    }
+
+    const sections = CFG.sections;
+    const total = sections.length;
+
+    const setVal = key => e => this.setField(key, e.target.value);
+
+    // ---- option row styling ----
+    const baseRow = { display: "flex", alignItems: "flex-start", gap: 12, padding: "12px 14px", border: "1.5px solid var(--border-default)", borderRadius: 8, background: "var(--surface-card)", cursor: "pointer", transition: "all .15s", userSelect: "none" };
+    const baseRowCenter = { ...baseRow, alignItems: "center" };
+    const selRow = { border: "1.5px solid var(--imu-blue-600)", background: "var(--imu-blue-50)" };
+    const radioDot = { width: 18, height: 18, borderRadius: "50%", flexShrink: 0, marginTop: 1, border: "2px solid var(--border-default)", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", transition: "all .15s" };
+    const radioDotSel = { border: "2px solid var(--imu-blue-600)", background: "var(--imu-blue-600)" };
+    const checkDot = { width: 18, height: 18, borderRadius: 4, flexShrink: 0, border: "2px solid var(--border-default)", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", transition: "all .15s" };
+    const checkDotSel = { border: "2px solid var(--imu-blue-600)", background: "var(--imu-blue-600)" };
+
+    const mkRadio = (key, options) => (options || []).map(o => {
+      const sel = d[key] === o.value;
+      return { value: o.value, label: o.label, sub: o.sub || "", hasSub: !!o.sub, selected: sel,
+        onClick: () => this.setField(key, o.value),
+        rowStyle: sel ? { ...baseRow, ...selRow } : baseRow,
+        dotStyle: sel ? { ...radioDot, ...radioDotSel } : radioDot };
+    });
+    const mkCheck = (key, options) => (options || []).map(o => {
+      const sel = (d[key] || []).includes(o.value);
+      return { value: o.value, label: o.label, selected: sel,
+        onClick: () => this.toggle(key, o.value),
+        rowStyle: sel ? { ...baseRowCenter, ...selRow } : baseRowCenter,
+        dotStyle: sel ? { ...checkDot, ...checkDotSel } : checkDot };
+    });
+
+    // ---- window (special) styling ----
+    const winInputBase = { width: "100%", padding: "11px 14px", borderRadius: "var(--radius-md)", fontSize: 15, outline: "none", fontFamily: "var(--font-sans)", transition: "border-color .15s, box-shadow .15s" };
+    const windowInputStyle = d.windowSameAsFiller
+      ? { ...winInputBase, border: "1.5px solid var(--border-default)", color: "var(--text-subtle)", background: "var(--surface-muted)", cursor: "not-allowed" }
+      : { ...winInputBase, border: "1.5px solid var(--border-default)", color: "var(--text-strong)", background: "var(--surface-page)" };
+    const sameOn = d.windowSameAsFiller;
+    const sameTagStyle = { display: "flex", alignItems: "center", gap: 5, padding: "3px 9px", borderRadius: "var(--radius-pill)", border: "1.5px solid " + (sameOn ? "var(--imu-blue-600)" : "var(--border-default)"), background: sameOn ? "var(--imu-blue-50)" : "var(--surface-page)", cursor: "pointer", userSelect: "none", transition: "all .15s" };
+    const sameBoxStyle = { width: 14, height: 14, borderRadius: 3, border: "1.5px solid " + (sameOn ? "var(--imu-blue-600)" : "var(--border-default)"), background: sameOn ? "var(--imu-blue-600)" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all .15s" };
+    const sameLabelStyle = { fontSize: 12, fontWeight: 500, fontFamily: "var(--font-zh)", color: sameOn ? "var(--imu-blue-600)" : "var(--text-subtle)" };
+
+    // ---- enrich a single question into ready-to-render props ----
+    const enrich = (q, num) => {
+      const hasError = isForm && !!this.state.tried[step] && !!q.required && !this.isFilled(q, d);
+      const errorMsg = q.type === "contact" ? "請至少填寫一種聯絡方式"
+        : q.type === "window" ? "請填寫聯絡窗口姓名"
+        : (q.type === "radio" || q.type === "checkbox") ? "此題為必選，請選擇後再繼續"
+        : "此題為必填，請填寫後再繼續";
+      const base = { key: q.key, num, q: q.q, hint: q.hint || "", hasHint: !!q.hint, optional: !q.required, required: !!q.required,
+        hasError, errorMsg,
+        isText: false, isNumber: false, isTextarea: false, isRadio: false, isCheckbox: false, isWindow: false, isContact: false };
+      switch (q.type) {
+        case "text":
+          return { ...base, isText: true, value: d[q.key] || "", onChange: setVal(q.key), placeholder: q.placeholder || "", unit: q.unit || "", hasUnit: !!q.unit, prefix: q.prefix || "", hasPrefix: !!q.prefix };
+        case "number":
+          return { ...base, isNumber: true, value: d[q.key] || "", onChange: setVal(q.key), placeholder: q.placeholder || "", unit: q.unit || "", prefix: q.prefix || "", hasPrefix: !!q.prefix };
+        case "textarea":
+          return { ...base, isTextarea: true, value: d[q.key] || "", onChange: setVal(q.key), placeholder: q.placeholder || "", rows: q.rows || 3 };
+        case "radio": {
+          const opts = (q.computed === "budget") ? this.budgetOptions(q) : q.options;
+          const selectNote = (q.computed === "budget" && d[q.key] === "light")
+            ? (((this.BUDGET_MODEL && this.BUDGET_MODEL.text) || {}).lightNote || "")
+            : "";
+          return { ...base, isRadio: true, options: mkRadio(q.key, opts),
+            hasSelectNote: !!selectNote, selectNote,
+            showOther: !!q.allowOther && (d[q.key] === "other" || (q.otherWhen && d[q.key] === q.otherWhen)),
+            otherValue: d[q.otherKey] || "", otherOnChange: setVal(q.otherKey || "otherText"),
+            otherRows: q.otherRows || 3, otherPlaceholder: q.otherPlaceholder || "請補充說明..." };
+        }
+        case "checkbox":
+          return { ...base, isCheckbox: true, options: mkCheck(q.key, q.options),
+            showOther: !!q.allowOther && (d[q.key] || []).includes("other"),
+            otherValue: d[q.otherKey] || "", otherOnChange: setVal(q.otherKey || "otherReason"),
+            otherPlaceholder: q.otherPlaceholder || "請補充說明..." };
+        case "window":
+          return { ...base, isWindow: true,
+            windowNameValue: d.windowSameAsFiller ? d.fillerName : d.windowName, windowTitleValue: d.windowTitle || "",
+            onWindowName: setVal("windowName"), onWindowTitle: setVal("windowTitle"),
+            windowInputStyle, sameTagStyle, sameBoxStyle, sameLabelStyle, sameOn, onToggleSame: () => this.onToggleSame() };
+        case "contact":
+          return { ...base, isContact: true,
+            lineValue: d.contactLine || "", phoneValue: d.contactPhone || "", emailValue: d.contactEmail || "",
+            onLine: setVal("contactLine"), onPhone: setVal("contactPhone"), onEmail: setVal("contactEmail") };
+        default:
+          return base;
+      }
+    };
+
+    // ---- continuous question numbering across all sections ----
+    let counter = 0;
+    const numMap = {};
+    sections.forEach(sec => sec.questions.forEach(q => { counter++; numMap[q.key] = "Q" + String(counter).padStart(2, "0"); }));
+
+    // ---- current section's visible questions ----
+    let questions = [];
+    if (isForm && sections[step - 1]) {
+      questions = sections[step - 1].questions
+        .filter(q => !q.showIf || d[q.showIf.key] === q.showIf.equals)
+        .map(q => enrich(q, numMap[q.key]));
+    }
+
+    // ---- intro ----
+    const introFields = CFG.intro.fields.map(f => ({
+      label: f.label, required: !!f.required, placeholder: f.placeholder || "",
+      value: d[f.key] || "", onChange: setVal(f.key),
+    }));
+    const canStart = CFG.intro.fields.filter(f => f.required).every(f => (d[f.key] || "").trim());
+    const startBase = { padding: "14px 36px", border: "none", borderRadius: "var(--radius-md)", fontSize: 15, fontWeight: 600, fontFamily: "var(--font-zh)", letterSpacing: "0.02em", transition: "background .2s" };
+    const startBtnStyle = canStart
+      ? { ...startBase, background: "var(--action-primary)", color: "var(--text-on-blue)", cursor: "pointer" }
+      : { ...startBase, background: "var(--surface-muted)", color: "var(--text-subtle)", cursor: "not-allowed" };
+    const startBtnHover = canStart ? { background: "var(--action-primary-hover)" } : {};
+
+    // ---- progress tracker ----
+    const tracker = sections.map((s, i) => {
+      const n = i + 1;
+      return { label: s.label, style: {
+        fontFamily: "var(--font-zh)", fontSize: 11, letterSpacing: "0.02em", transition: "color .2s",
+        color: n === step ? "var(--imu-blue-600)" : n < step ? "var(--text-muted)" : "var(--text-subtle)",
+        fontWeight: n === step ? 700 : 400 } };
+    });
+    const cur = isForm && sections[step - 1] ? sections[step - 1] : { eye: "", label: "" };
+
+    // ---- done ----
+    const summaryText = isDone ? this.buildText(d) : "";
+    const copyBtnStyle = { display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 16px", background: this.state.copied ? "var(--imu-success)" : "var(--action-primary)", color: "#fff", border: "none", borderRadius: "var(--radius-sm)", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "var(--font-zh)", transition: "background .2s" };
+    const mailtoHref = "mailto:imuchien@gmail.com?subject=" + encodeURIComponent("辦公室規劃需求確認表 - " + d.companyName) + "&body=" + encodeURIComponent(summaryText);
+
+    return {
+      isIntro, isForm, isDone,
+      d, introFields, questions, tracker, sections, sectionCount: total,
+      currentEye: cur.eye, currentLabel: cur.label,
+      stepLabel: isForm ? step + " / " + total : "",
+      barFillStyle: { height: "100%", width: isForm ? (step / total * 100) + "%" : "0%", background: "var(--imu-blue-600)", borderRadius: 1, transition: "width .4s var(--ease-standard)" },
+      startDisabled: !canStart, showStartHint: !canStart, startBtnStyle, startBtnHover,
+      onStart: () => { if (canStart) this.setState({ step: 1 }); },
+      onBack: () => this.setState(s => ({ step: s.step === 1 ? "intro" : s.step - 1 })),
+      onNext: () => {
+        const secIdx = this.state.step - 1;
+        const sec = this.CFG && this.CFG.sections[secIdx];
+        if (sec) {
+          const dd = this.state.d;
+          const bad = sec.questions.filter(q => (!q.showIf || dd[q.showIf.key] === q.showIf.equals) && q.required && !this.isFilled(q, dd));
+          if (bad.length) { this.setState(s => ({ tried: { ...s.tried, [s.step]: true } })); return; }
+        }
+        this.setState(s => ({ step: s.step === total ? "done" : s.step + 1 }));
+      },
+      nextLabel: step === total ? "送出問卷 →" : "下一步 →",
+      summaryText, copyBtnStyle,
+      copyLabel: this.state.copied ? "✓ 已複製！" : "複製全文",
+      onCopy: () => {
+        const text = this.buildText(this.state.d);
+        const flash = () => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 2500); };
+        const fallback = () => {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.setAttribute("readonly", "");
+          ta.style.cssText = "position:fixed;top:0;left:0;opacity:0;font-size:16px";
+          document.body.appendChild(ta);
+          ta.select();
+          ta.setSelectionRange(0, text.length);
+          try { document.execCommand("copy"); flash(); } catch (e) {}
+          document.body.removeChild(ta);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(flash).catch(fallback);
+        } else { fallback(); }
+      },
+      mailtoHref,
+      onPrint: () => {
+        const text = this.buildText(this.state.d);
+        const iframe = document.createElement("iframe");
+        iframe.setAttribute("aria-hidden", "true");
+        iframe.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden";
+        document.body.appendChild(iframe);
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write('<!doctype html><html><head><meta charset="utf-8"><title>辦公室規劃需求確認表</title><style>@page{margin:18mm}body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;color:#14161c}pre{white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:13px;line-height:1.85;margin:0}</style></head><body><pre id="t"></pre></body></html>');
+        doc.close();
+        doc.getElementById("t").textContent = text;
+        const win = iframe.contentWindow;
+        const cleanup = () => { setTimeout(() => { if (iframe.parentNode) iframe.parentNode.removeChild(iframe); }, 500); };
+        win.onafterprint = cleanup;
+        setTimeout(() => { win.focus(); win.print(); cleanup(); }, 300);
+      },
+      onRestart: () => this.setState({ step: "intro", copied: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

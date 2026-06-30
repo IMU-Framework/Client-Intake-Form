@@ -311,12 +311,11 @@ class Component extends DCLogic {
     if (!area) return { hasArea: false };
     let mult = 1;
     for (const b of M.scale) { if (area <= b.max) { mult = b.mult; break; } }
-    const furnLow = head * M.furniturePerHead.low;
-    const furnHigh = head * M.furniturePerHead.high;
+    const furn = head * (M.furniturePerHead.low + M.furniturePerHead.high) / 2;
     const tiers = M.tiers.map(t => {
       const engLow = t.low * mult * area, engHigh = t.high * mult * area;
       return { value: t.value, name: t.name,
-        engLow, engHigh, allLow: engLow + furnLow, allHigh: engHigh + furnHigh };
+        engLow, engHigh, allLow: engLow + furn, allHigh: engHigh + furn };
     });
     return { hasArea: true, area, areaKey, head, mult, scope: d[M.furnitureScopeKey], tiers };
   }
@@ -340,9 +339,8 @@ class Component extends DCLogic {
       if (o.value === "light") {
         if (!b || !b.hasArea) return { value: o.value, label: `${T.lightName || "輕量"}（請先填寫坪數）` };
         const t1 = b.tiers[0];
-        const isYes = b.scope === "yes" && hasFurn;
-        const low = isYes ? t1.allLow : t1.engLow;
-        const pre = isYes ? (T.scopeYes || "總預算")
+        const low = b.scope === "no" ? t1.engLow : t1.allLow;
+        const pre = (b.scope === "yes") ? (T.scopeYes || "總預算")
           : (b.scope === "no") ? (T.scopeNo || "裝修工程預算")
           : (T.scopePartial || "總預算約");
         return { value: o.value, label: `${T.lightName || "輕量"}・${pre} ${r(low)}${T.lightSuffix || " 萬以下"}` };
@@ -354,7 +352,7 @@ class Component extends DCLogic {
         return { value: o.value, label: `${t.name}・${T.scopeYes || "總預算"} ${r(t.allLow)} – ${r(t.allHigh)} ${U}` };
       }
       if (b.scope !== "no") {
-        return { value: o.value, label: `${t.name}・${T.scopePartial || "總預算約"} ${r(t.engLow)} – ${r(t.allHigh)} ${U}` };
+        return { value: o.value, label: `${t.name}・${T.scopePartial || "總預算約"} ${r(t.allLow)} – ${r(t.allHigh)} ${U}` };
       }
       return { value: o.value, label: `${t.name}・${T.scopeNo || "裝修工程預算"} ${r(t.engLow)} – ${r(t.engHigh)} ${U}` };
     });
@@ -384,16 +382,15 @@ class Component extends DCLogic {
             if (b && b.hasArea) {
               const r = x => Number(this.roundAmt(x, b.scope)).toLocaleString("en-US");
               if (d[q.key] === "light") {
-                const isYes = b.scope === "yes" && b.head > 0;
-                const low = isYes ? b.tiers[0].allLow : b.tiers[0].engLow;
-                const pre = isYes ? "含家具設備約" : (b.scope === "no" ? "裝修工程約" : "總預算約");
+                const low = b.scope === "no" ? b.tiers[0].engLow : b.tiers[0].allLow;
+                const pre = b.scope === "yes" ? "含家具設備約" : (b.scope === "no" ? "裝修工程約" : "總預算約");
                 rtxt = `輕量・${pre} ${r(low)} 萬以下`;
               } else {
                 const t = b.tiers.find(x => x.value === d[q.key]);
                 if (t) {
                   if (b.scope === "yes" && b.head > 0) rtxt = `${t.name}・含家具設備約 ${r(t.allLow)}–${r(t.allHigh)} 萬`;
                   else if (b.scope === "no") rtxt = `${t.name}・裝修工程約 ${r(t.engLow)}–${r(t.engHigh)} 萬`;
-                  else rtxt = `${t.name}・總預算約 ${r(t.engLow)}–${r(t.allHigh)} 萬`;
+                  else rtxt = `${t.name}・總預算約 ${r(t.allLow)}–${r(t.allHigh)} 萬`;
                 }
               }
             }

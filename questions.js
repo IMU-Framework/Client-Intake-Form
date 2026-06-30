@@ -248,8 +248,8 @@ export const BUDGET_MODEL = {
   roundTo: 100,
   tiers: [
     { value: "tier1", name: "標準", low: 4, high: 6 },
-    { value: "tier2", name: "進階", low: 6, high: 9 },
-    { value: "tier3", name: "旗艦", low: 9, high: 14 },
+    { value: "tier2", name: "進階", low: 6, high: 10 },
+    { value: "tier3", name: "旗艦", low: 10, high: 15 },
   ],
   scale: [
     { max: 100, mult: 1.10 },

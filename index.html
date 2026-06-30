@@ -314,7 +314,7 @@ class Component extends DCLogic {
     const furn = head * (M.furniturePerHead.low + M.furniturePerHead.high) / 2;
     const tiers = M.tiers.map(t => {
       const engLow = t.low * mult * area, engHigh = t.high * mult * area;
-      return { value: t.value, name: t.name,
+      return { value: t.value, name: t.name, openEnded: !!t.openEnded,
         engLow, engHigh, allLow: engLow + furn, allHigh: engHigh + furn };
     });
     return { hasArea: true, area, areaKey, head, mult, scope: d[M.furnitureScopeKey], tiers };
@@ -348,13 +348,14 @@ class Component extends DCLogic {
       if (!b || !b.hasArea) return { value: o.value, label: o.label + "（請先填寫坪數）" };
       const t = b.tiers.find(x => x.value === o.value);
       if (!t) return { value: o.value, label: o.label };
-      if (b.scope === "yes" && hasFurn) {
-        return { value: o.value, label: `${t.name}・${T.scopeYes || "總預算"} ${r(t.allLow)} – ${r(t.allHigh)} ${U}` };
-      }
-      if (b.scope !== "no") {
-        return { value: o.value, label: `${t.name}・${T.scopePartial || "總預算約"} ${r(t.allLow)} – ${r(t.allHigh)} ${U}` };
-      }
-      return { value: o.value, label: `${t.name}・${T.scopeNo || "裝修工程預算"} ${r(t.engLow)} – ${r(t.engHigh)} ${U}` };
+      const useAll = b.scope !== "no";
+      const tLow = useAll ? t.allLow : t.engLow;
+      const tHigh = useAll ? t.allHigh : t.engHigh;
+      const tPre = (b.scope === "yes" && hasFurn) ? (T.scopeYes || "總預算")
+        : (b.scope === "no") ? (T.scopeNo || "裝修工程預算")
+        : (T.scopePartial || "總預算約");
+      const tRange = t.openEnded ? `${r(tLow)} ${U}以上` : `${r(tLow)} – ${r(tHigh)} ${U}`;
+      return { value: o.value, label: `${t.name}・${tPre} ${tRange}` };
     });
     return options;
   }
@@ -388,9 +389,11 @@ class Component extends DCLogic {
               } else {
                 const t = b.tiers.find(x => x.value === d[q.key]);
                 if (t) {
-                  if (b.scope === "yes" && b.head > 0) rtxt = `${t.name}・含家具設備約 ${r(t.allLow)}–${r(t.allHigh)} 萬`;
-                  else if (b.scope === "no") rtxt = `${t.name}・裝修工程約 ${r(t.engLow)}–${r(t.engHigh)} 萬`;
-                  else rtxt = `${t.name}・總預算約 ${r(t.allLow)}–${r(t.allHigh)} 萬`;
+                  const tBLow = (b.scope === "no") ? t.engLow : t.allLow;
+                  const tBHigh = (b.scope === "no") ? t.engHigh : t.allHigh;
+                  const tBPre = (b.scope === "yes" && b.head > 0) ? "含家具設備約" : (b.scope === "no" ? "裝修工程約" : "總預算約");
+                  if (t.openEnded) rtxt = `${t.name}・${tBPre} ${r(tBLow)} 萬以上`;
+                  else rtxt = `${t.name}・${tBPre} ${r(tBLow)}–${r(tBHigh)} 萬`;
                 }
               }
             }

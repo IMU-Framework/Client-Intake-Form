@@ -106,7 +106,7 @@ export const INTAKE_CONFIG = {
       questions: [
         { key: "budgetFurniture", type: "radio", required: true,
           q: "您的裝修預算是否要涵蓋家具與設備採購？",
-          hint: "選擇後，下一題的預算估算會自動切換顯示（純工程費／含家具設備）",
+          hint: "選擇後，下一題的預算估算會自動切換顯示",
           sumLabel: "家具設備",
           allowOther: true, otherWhen: "unknown", otherKey: "budgetFurnitureNote", otherRows: 2, otherPlaceholder: "請補充說明…",
           options: [
@@ -118,7 +118,7 @@ export const INTAKE_CONFIG = {
 
         { key: "budgetRange", type: "radio", required: true,
           q: "依您的坪數與人數，這次規劃的預算大約落在哪個級距？",
-          hint: "以下為預算區間建議值（設計費、監工費另計），依您填入的坪數、人數自動估算，僅供初步參考",
+          hint: "以下為預算區間建議值（設計、監工費另計），已依您填入的坪數、人數自動估算，僅供初步參考。",
           sumLabel: "裝修預算",
           computed: "budget",
           allowOther: true, otherWhen: "tbd", otherKey: "budgetRangeNote", otherRows: 2, otherPlaceholder: "請補充說明…",
@@ -175,7 +175,7 @@ export const INTAKE_CONFIG = {
       questions: [
         { key: "window", type: "window", required: true,
           q: "這個專案的主要聯絡窗口是？",
-          hint: "負責後續溝通協調的聯絡人（可能是您，也可能是同事）",
+          hint: "負責後續溝通協調的聯絡人",
           sumLabel: "主要窗口" },
 
         { key: "contact", type: "contact", required: false,

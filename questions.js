@@ -118,7 +118,7 @@ export const INTAKE_CONFIG = {
 
         { key: "budgetRange", type: "radio", required: true,
           q: "依您的坪數與人數，這次規劃的預算大約落在哪個級距？",
-          hint: "以下為裝修工程費（設計費、監工費另計），依上一題自動估算，僅供初步參考",
+          hint: "以下為預算區間建議值（設計費、監工費另計），依您填入的坪數、人數自動估算，僅供初步參考",
           sumLabel: "裝修預算",
           computed: "budget",
           allowOther: true, otherWhen: "tbd", otherKey: "budgetRangeNote", otherRows: 2, otherPlaceholder: "請補充說明…",

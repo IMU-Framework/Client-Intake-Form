@@ -1,0 +1,36 @@
+/* ============================================================
+   IMU Framework Design — Radii, borders, shadows, motion
+   The brand is built on crisp monoline strokes & near-square
+   geometry. Radii are SMALL. Shadows are soft and restrained;
+   structure is communicated with 1px lines, not heavy elevation.
+   ============================================================ */
+
+:root {
+  /* Radii — keep tight & architectural */
+  --radius-none: 0;
+  --radius-sm:   3px;
+  --radius-md:   6px;
+  --radius-lg:   10px;
+  --radius-xl:   16px;
+  --radius-pill: 999px;
+  --radius-card: var(--radius-md);
+
+  /* Border widths — the monoline DNA */
+  --border-w-hair: 1px;
+  --border-w:      1.5px;  /* default brand stroke */
+  --border-w-bold: 2.5px;  /* logo-weight stroke */
+
+  /* Shadows — soft, cool-tinted, low spread */
+  --shadow-xs: 0 1px 2px rgba(20, 22, 28, 0.05);
+  --shadow-sm: 0 1px 3px rgba(20, 22, 28, 0.07), 0 1px 2px rgba(20, 22, 28, 0.04);
+  --shadow-md: 0 4px 12px rgba(20, 22, 28, 0.08);
+  --shadow-lg: 0 12px 32px rgba(20, 22, 28, 0.10);
+  --shadow-focus: 0 0 0 3px rgba(47, 74, 156, 0.28);
+
+  /* Motion — measured, no bounce. Geometric ease. */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1); /* @kind other */
+  --ease-out:      cubic-bezier(0.16, 1, 0.3, 1); /* @kind other */
+  --dur-fast:   120ms; /* @kind other */
+  --dur-normal: 200ms; /* @kind other */
+  --dur-slow:   320ms; /* @kind other */
+}

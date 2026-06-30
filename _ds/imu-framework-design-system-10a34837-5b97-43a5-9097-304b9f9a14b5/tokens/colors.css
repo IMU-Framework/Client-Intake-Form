@@ -1,0 +1,84 @@
+/* ============================================================
+   IMU Framework Design — Color tokens
+   Brand: deep indigo #2F4A9C, periwinkle #AEB6D7, pure black/white.
+   Minimal, architectural, high-contrast monochrome + one blue.
+   ============================================================ */
+
+:root {
+  /* ---- Brand blue (primary) — sampled from logo badge #2F4A9C ---- */
+  --imu-blue-50:  #f2f4fb;
+  --imu-blue-100: #e3e8f6;
+  --imu-blue-200: #c2ccec;
+  --imu-blue-300: #98a8df;
+  --imu-blue-400: #6a80cb;
+  --imu-blue-500: #4761b5;
+  --imu-blue-600: #2f4a9c;  /* core brand blue */
+  --imu-blue-700: #283e83;
+  --imu-blue-800: #20315f;
+  --imu-blue-900: #182446;
+
+  /* ---- Periwinkle (secondary / muted brand) — namecard tagline ---- */
+  --imu-peri-200: #d7dcef;
+  --imu-peri-300: #aeb6d7;  /* sampled tagline gray */
+  --imu-peri-400: #8c97c4;
+
+  /* ---- Ink & neutrals (cool-neutral, logo is pure black) ---- */
+  --imu-black:     #000000;  /* reserved for logo / max contrast */
+  --imu-ink:       #14161c;  /* default near-black text */
+  --imu-neutral-900: #1d1f27;
+  --imu-neutral-800: #2c2f3a;
+  --imu-neutral-700: #434756;
+  --imu-neutral-600: #5d6273;
+  --imu-neutral-500: #7c8193;
+  --imu-neutral-400: #a0a5b5;
+  --imu-neutral-300: #c5c9d4;
+  --imu-neutral-200: #e0e3ea;
+  --imu-neutral-150: #ebedf1;
+  --imu-neutral-100: #f3f4f7;
+  --imu-neutral-50:  #f9fafb;
+  --imu-white:       #ffffff;
+
+  /* ---- Semantic status (kept restrained, blue-aligned) ---- */
+  --imu-success: #2f8a5b;
+  --imu-warning: #c08a2e;
+  --imu-danger:  #c0392f;
+  --imu-info:    var(--imu-blue-600);
+
+  /* ============================================================
+     SEMANTIC ALIASES — reference these in components
+     ============================================================ */
+
+  /* Text */
+  --text-strong:   var(--imu-ink);
+  --text-body:     var(--imu-neutral-800);
+  --text-muted:    var(--imu-neutral-600);
+  --text-subtle:   var(--imu-neutral-500);
+  --text-on-blue:  var(--imu-white);
+  --text-brand:    var(--imu-blue-600);
+  --text-link:     var(--imu-blue-600);
+
+  /* Surfaces */
+  --surface-page:    var(--imu-white);
+  --surface-raised:  var(--imu-white);
+  --surface-sunken:  var(--imu-neutral-50);
+  --surface-card:    var(--imu-white);
+  --surface-muted:   var(--imu-neutral-100);
+  --surface-inverse: var(--imu-ink);
+  --surface-brand:   var(--imu-blue-600);
+  --surface-brand-soft: var(--imu-blue-50);
+
+  /* Borders / lines (the brand lives on monoline strokes) */
+  --border-hairline: var(--imu-neutral-200);
+  --border-default:  var(--imu-neutral-300);
+  --border-strong:   var(--imu-ink);
+  --border-brand:    var(--imu-blue-600);
+
+  /* Interactive */
+  --action-primary:        var(--imu-blue-600);
+  --action-primary-hover:  var(--imu-blue-700);
+  --action-primary-active: var(--imu-blue-800);
+  --focus-ring:            var(--imu-blue-400);
+
+  /* Brand legal — reusable copyright string (use via `content: var(--imu-copyright)`) */
+  --imu-copyright: "© 2026 一畝框作有限公司 · IMU Framework Design";
+}

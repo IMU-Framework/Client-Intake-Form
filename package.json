@@ -1,0 +1,12 @@
+{
+  "name": "imu-client-intake-form",
+  "version": "1.0.0",
+  "description": "IMU Framework Design — 辦公室設計前置問卷",
+  "scripts": {
+    "start": "npx serve . -p 3000",
+    "dev": "npx serve . -p 3000 --no-clipboard"
+  },
+  "keywords": ["imu", "intake-form", "office-design"],
+  "license": "UNLICENSED",
+  "private": true
+}

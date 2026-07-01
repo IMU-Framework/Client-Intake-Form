@@ -189,8 +189,7 @@ export const INTAKE_CONFIG = {
           allowOther: true, otherKey: "fillerRoleNote", otherRows: 1, otherPlaceholder: "請填寫您的角色…",
           options: [
             { value: "decision",  label: "主要決策者",          sub: "我可以直接拍板定案" },
-            { value: "recommend", label: "評估後向決策者提報",  sub: "我負責比較方案、彙整後呈報" },
-            { value: "execute",   label: "執行窗口",            sub: "我負責協調聯絡，決策由主管或老闆定奪" },
+            { value: "execute",   label: "執行窗口",            sub: "我負責協調聯絡，評估後向決策者安排提報時間，決策由主管或老闆定奪" },
             { value: "other",     label: "其他角色" },
           ] },
 

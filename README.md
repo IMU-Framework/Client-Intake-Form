@@ -1,3 +1,13 @@
+# 部署位置（DEPLOYMENT — READ FIRST）
+
+本頁面的**正式部署位置**為 **https://info.imuframework.com/intake/** ，
+由主站 repo [PRE-CONSULTATION-QUESTIONNAIRE](https://github.com/IMU-Framework/PRE-CONSULTATION-QUESTIONNAIRE) 的 `intake/` 資料夾提供服務。
+
+本 repo 為**原始來源／設計工作區**。在此更新 `index.html`、`support.js`、`questions.js`、`_ds/`、`assets/` 後，
+需將這些檔案複製到主站 repo 的 `intake/` 資料夾並提交，變更才會上線。
+
+---
+
 # CODING AGENTS: READ THIS FIRST
 
 This is a **handoff bundle** from Claude Design (claude.ai/design).
